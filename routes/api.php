@@ -22,7 +22,7 @@ Route::prefix('v1')->group(function () {
     Route::prefix('car-park')->group(function () {
         Route::get('/', [CarParkController::class, 'index']);
 
-        Route::prefix('/{carPark}')->group(function () {
+        Route::prefix('{carPark}')->group(function () {
             Route::get('/', [CarParkController::class, 'show']);
 
             Route::prefix('/spaces')->group(function () {
