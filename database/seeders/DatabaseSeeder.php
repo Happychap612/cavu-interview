@@ -5,6 +5,9 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
+use App\Models\CarPark;
+use App\Models\CarPark\Space;
+
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -12,11 +15,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        $carPark = CarPark::create([
+            'name' => 'Manchester Airport',
+        ]);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        $spaces = [];
+
+        for ($i=1; $i <= 10; $i++) { 
+            $spaces[] = [
+                'name' => 'A' . $i,
+            ];
+        }
+
+        $carPark->spaces()->createMany($spaces);
     }
 }
