@@ -65,4 +65,15 @@ class BookingsController extends Controller
     {
         return $booking->makeHidden('id');
     }
+
+    /**
+     * Cancels/Deletes a booking
+     *
+     * @param Booking $booking
+     * @return bool
+     */
+    function delete(Booking $booking)
+    {
+        return $booking->delete() ? response()->json([], 204) : response()->json([], 500);
+    }
 }

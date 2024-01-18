@@ -36,6 +36,7 @@ Route::prefix('v1')->group(function () {
 
     Route::prefix('bookings')->controller(BookingsController::class)->group(function () {
         Route::get('/{booking}', 'show');
+        Route::delete('/{booking}', 'delete');
         Route::post('/', 'store');
     });
 
