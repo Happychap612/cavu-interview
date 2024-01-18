@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 
 use App\Models\CarPark;
 use App\Models\CarPark\Space;
+use App\Models\Customer;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,13 +21,13 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $spaces = [];
-
         for ($i=1; $i <= 10; $i++) { 
             $spaces[] = [
                 'name' => 'A' . $i,
             ];
         }
-
         $carPark->spaces()->createMany($spaces);
+
+        $customers = Customer::factory()->count(10)->create();
     }
 }

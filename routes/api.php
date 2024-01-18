@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\BookingsController;
 use App\Http\Controllers\CarParkController;
 use App\Http\Controllers\CarPark\SpacesController as CarParkSpacesController;
 use App\Http\Controllers\SpacesController;
@@ -25,11 +25,16 @@ Route::prefix('v1')->group(function () {
         Route::prefix('{carPark}')->group(function () {
             Route::get('/', [CarParkController::class, 'show']);
 
-            Route::prefix('/spaces')->group(function () {
-                Route::get('/', [CarParkSpacesController::class, 'index']);
-                Route::get('/{space}', [CarParkSpacesController::class, 'show']);
+            Route::prefix('/spaces')->controller(CarParkSpacesController::class)->group(function () {
+                Route::get('/', 'index');
+                Route::get('/{space}', 'show');
             });
         });
+    });
+
+    Route::prefix('bookings')->controller(BookingsController::class)->group(function () {
+        Route::get('/{booking}', 'show');
+        Route::post('/', 'store');
     });
 
 

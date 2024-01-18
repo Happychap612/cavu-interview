@@ -2,15 +2,14 @@
 
 namespace App\Models\CarPark;
 
+use App\Models\Booking;
 use App\Models\CarPark;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Space extends Model
 {
-    use HasFactory;
-
     /**
      * Should the model use timestamps
      *
@@ -32,5 +31,13 @@ class Space extends Model
     public function carPark(): BelongsTo
     {
         return $this->belongsTo(CarPark::class);
+    }
+
+    /**
+     * Bookings for the space
+     */
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
     }
 }
