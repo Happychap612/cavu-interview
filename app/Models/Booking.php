@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Booking extends Model
 {
+    /**
+     * The attributes that are mass assignable
+     *
+     * @var array
+     */
     public $fillable = [
         'customer_id',
         'car_park_space_id',

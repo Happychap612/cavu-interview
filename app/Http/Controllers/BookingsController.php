@@ -24,6 +24,7 @@ class BookingsController extends Controller
      * going to be updating the start and end times
      * 
      * @TODO maybe move this to a form request
+     * @TODO investigate moving the date range checks inside the validation rules
      *
      * @param Request $request
      * @return Booking

@@ -11,6 +11,17 @@ class Customer extends Model
     use HasFactory;
 
     /**
+     * The attributes that are mass assignable
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'email',
+        'first_name',
+        'last_name',
+    ];
+
+    /**
      * Should the model use timestamps
      *
      * @var boolean
