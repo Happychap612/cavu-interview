@@ -74,8 +74,8 @@ class CarParkController extends Controller
         }
 
         return response()->json([
+            'price' => $price,
             'spaces' => $spaces->makeHidden('car_park_id'),
-            'price' => $price,          
         ]);
     }
 }
