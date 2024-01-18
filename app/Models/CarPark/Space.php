@@ -38,6 +38,6 @@ class Space extends Model
      */
     public function bookings(): HasMany
     {
-        return $this->hasMany(Booking::class);
+        return $this->hasMany(Booking::class, 'car_park_space_id', 'id');
     }
 }

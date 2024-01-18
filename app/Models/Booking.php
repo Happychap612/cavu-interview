@@ -33,6 +33,6 @@ class Booking extends Model
      */
     public function carParkSpace(): BelongsTo
     {
-        return $this->belongsTo(Space::class);
+        return $this->belongsTo(Space::class, 'id', 'car_park_space_id');
     }
 }
