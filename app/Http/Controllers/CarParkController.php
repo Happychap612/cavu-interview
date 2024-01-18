@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\CarPark;
-use App\Models\CarPark\Space;
+use Carbon\Carbon;
+// use App\Models\CarPark\Space;
 
 class CarParkController extends Controller
 {
@@ -21,7 +22,8 @@ class CarParkController extends Controller
 
     /**
      * returns a single car park with all its spaces
-     * ideally would hide the spaces car park ID but laravel wasn't playing ball
+     * 
+     * @TODO hide spaces car park ID but laravel wasn't playing ball
      *
      * @param CarPark $carPark
      * @return Car Park
@@ -33,6 +35,9 @@ class CarParkController extends Controller
 
     /**
      * Return availability for a car park
+     * 
+     * @TODO support pricing based on pricing rules stored in the database per car-park e.g. weekends, summer, winter
+     * @TODO move validation to a form request
      *
      * @param CarPark $carPark
      * @param Request $request
@@ -45,10 +50,33 @@ class CarParkController extends Controller
             'end' => 'required|date|after_or_equal:start',
         ]);
 
-        $spaces = $carPark->spaces()->whereDoesntHave('bookings', function ($query) use ($validated) {
-            $query->whereBetween('start', [$validated['start'], $validated['end']])
-                ->orWhereBetween('end', [$validated['start'], $validated['end']]);
+        $start = Carbon::parse($validated['start']);
+        $end = Carbon::parse($validated['end']);
+
+        $spaces = $carPark->spaces()->whereDoesntHave('bookings', function ($query) use ($start, $end) {
+            $query->whereBetween('start', [$start, $end])
+                ->orWhereBetween('end', [$start, $end]);
         })->get();
+
+        if ($spaces->isEmpty()) {
+            return response()->json([
+                'message' => 'No availability for this car park on these dates',
+            ], 400);
+        }
+
+        // create range after validation to ensure the dates are valid we're not calcing prices when theres no availability
+        $dates = $start->range($end, '1 day');
+        $price = 0;
+
+        foreach ($dates as $date) {
+            $price += $date->isWeekend() ? $carPark->weekendRate : $carPark->weekdayRate;
+            $price += ($date->quarter == 2 or $date->quarter == 3) ? $carPark->summerRate : $carPark->winterRate;
+        }
+
+        return response()->json([
+            'spaces' => $spaces,
+            'price' => $price,          
+        ]);
 
         return $spaces->makeHidden('car_park_id');
     }

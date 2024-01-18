@@ -15,6 +15,11 @@ class CarPark extends Model
      */
     public $timestamps = false;
 
+    public $weekendRate = 10;
+    public $weekdayRate = 5;
+    public $summerRate = 15;
+    public $winterRate = 10;
+
     /**
      * The spaces for the car park
      */

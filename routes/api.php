@@ -20,14 +20,12 @@ use App\Http\Controllers\SpaceController;
 */
 
 Route::prefix('v1')->group(function () {
-    Route::prefix('car-park')->group(function () {
-        Route::get('/', [CarParkController::class, 'index']);
+    Route::prefix('car-park')->controller(CarParkController::class)->group(function () {
+        Route::get('/', 'index');
 
         Route::prefix('{carPark}')->group(function () {
-            Route::controller(CarParkController::class)->group(function () {
-                Route::get('/', 'show');
-                Route::post('/availability', 'availability');
-            });
+            Route::get('/', 'show');
+            Route::post('/availability', 'availability');
 
             Route::prefix('/spaces')->controller(CarParkSpacesController::class)->group(function () {
                 Route::get('/', 'index');
