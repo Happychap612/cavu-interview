@@ -2,11 +2,9 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 use App\Models\CarPark;
-use App\Models\CarPark\Space;
 use App\Models\Customer;
 
 class DatabaseSeeder extends Seeder
