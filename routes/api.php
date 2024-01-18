@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookingsController;
 use App\Http\Controllers\CarParkController;
 use App\Http\Controllers\CarPark\SpacesController as CarParkSpacesController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SpacesController;
 
 /*
@@ -34,6 +35,11 @@ Route::prefix('v1')->group(function () {
 
     Route::prefix('bookings')->controller(BookingsController::class)->group(function () {
         Route::get('/{booking}', 'show');
+        Route::post('/', 'store');
+    });
+
+    Route::prefix('customer')->controller(CustomerController::class)->group(function () {
+        Route::get('/{customer}', 'show');
         Route::post('/', 'store');
     });
 
