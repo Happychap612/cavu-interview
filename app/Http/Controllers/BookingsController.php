@@ -2,11 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BookingSaveRequest;
 use App\Models\Booking;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class BookingsController extends Controller
 {
+    private function existingBooking($carParkSpaceId, $start, $end, $bookingId = null)
+    {
+        return Booking::where('car_park_space_id', $carParkSpaceId)
+            ->where('start', '<=', $start)
+            ->where('end', '>=', $end)
+            ->where('id', '!=', $bookingId)
+            ->first();
+    }
+
     /**
      * Returns booking without the ID
      *
@@ -23,25 +34,15 @@ class BookingsController extends Controller
      * Could make an argument for using it for the update validation too however that request is only
      * going to be updating the start and end times
      * 
-     * @TODO maybe move this to a form request
      * @TODO investigate moving the date range checks inside the validation rules
      *
      * @param Request $request
      * @return Booking
      */
-    function store(Request $request)
+    function store(BookingSaveRequest $request)
     {
-        $validated = $request->validate([
-            'car_park_space_id' => 'required|exists:car_park_spaces,id',
-            'customer_id' => 'required|exists:customers,id',
-            'start' => 'required|date|before:end|after_or_equal:tomorrow',
-            'end' => 'required|date|after_or_equal:start',
-        ]);
-
-        $existingBooking = Booking::where('car_park_space_id', $validated['car_park_space_id'])
-            ->where('start', '<=', $validated['start'])
-            ->where('end', '>=', $validated['end'])
-            ->first();
+        $validated = $request->validated();
+        $existingBooking = $this->existingBooking($validated['car_park_space_id'], $validated['start'], $validated['end']);
 
         if ($existingBooking) {
             return response()->json([
@@ -61,9 +62,21 @@ class BookingsController extends Controller
      * @param Booking $booking
      * @return bool
      */
-    function update(Booking $booking)
+    function update(Booking $booking, BookingSaveRequest $request)
     {
-        return $booking->makeHidden('id');
+        $validated = $request->validated();
+        $existingBooking = $this->existingBooking($validated['car_park_space_id'], $validated['start'], $validated['end'], $booking->id);
+
+        if ($existingBooking) {
+            return response()->json([
+                'message' => 'Cannot amend booking as there is already a booking for this space at this time',
+            ], 400);
+        }
+
+        $booking->update($validated);
+
+        // No need to hide the ID here as this is a new booking
+        return $booking;
     }
 
     /**
