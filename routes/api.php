@@ -6,7 +6,7 @@ use App\Http\Controllers\BookingsController;
 use App\Http\Controllers\CarParkController;
 use App\Http\Controllers\CarPark\SpacesController as CarParkSpacesController;
 use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\SpacesController;
+use App\Http\Controllers\SpaceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,5 +47,5 @@ Route::prefix('v1')->group(function () {
     });
 
 
-    Route::get('/space/{space}', [SpacesController::class, 'show']);
+    Route::get('/space/{space}', [SpaceController::class, 'show']);
 });
